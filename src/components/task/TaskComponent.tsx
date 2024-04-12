@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useTasks } from '../../context/TaskContext'; // Importa el contexto y el hook useTasks
 
 const Task = ({ id, title, description, dueDate, currentState, notes, onDelete }) => {
-  const { updateTask, deleteTask } = useTasks(); // Obtiene la función updateTask del contexto
+  const { updateTask, deleteTask } = useTasks();
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
@@ -16,12 +16,11 @@ const Task = ({ id, title, description, dueDate, currentState, notes, onDelete }
   };
 
   const handleSave = () => {
-    // Llama a la función updateTask con el ID de la tarea y los nuevos datos
     updateTask(id, {
       title: editedTitle,
       description: editedDescription,
       dueDate: editedDueDate,
-      currentState: currentState, // Mantenemos el estado actual, ya que no se debe modificar en este componente
+      currentState: currentState,
       notes: editedNotes,
     });
     setIsEditing(false);

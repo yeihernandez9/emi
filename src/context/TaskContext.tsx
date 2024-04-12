@@ -6,16 +6,20 @@ export const TaskContext = createContext();
 // Proveedor del contexto
 const TaskProvider = ({ children }) => {
   const [data, setData] = useState([]);
+  const [error, setError] = useState(null);
 
-  // Función para obtener todas las tareas desde json-server
   const getAllTasks = async () => {
     try {
-      const response = await fetch('http://localhost:5001/tasks'); // Cambia la URL según la configuración de tu servidor json-server
+      const response = await fetch('http://localhost:5001/tasks');
+      if (!response.ok) {
+        throw new Error('Error al obtener las tareas: ' + response.statusText);
+      }
       const data = await response.json();
-      console.log(data);
       setData(data);
+      setError(null); // Reiniciar el estado de error si la solicitud es exitosa
     } catch (error) {
       console.error('Error al obtener las tareas desde json-server:', error);
+      setError('Hubo un problema al cargar las tareas. Por favor, inténtalo de nuevo más tarde.');
     }
   };
 
@@ -28,12 +32,15 @@ const TaskProvider = ({ children }) => {
         },
         body: JSON.stringify(newTask),
       });
+      if (!response.ok) {
+        throw new Error('Error al agregar la nueva tarea: ' + response.statusText);
+      }
       const data = await response.json();
       console.log('Nueva tarea agregada:', data);
-      // Actualizar la lista de tareas después de agregar una nueva
       getAllTasks();
     } catch (error) {
       console.error('Error al agregar la nueva tarea:', error);
+      setError('Hubo un problema al agregar la nueva tarea. Por favor, inténtalo de nuevo más tarde.');
     }
   };
 
@@ -46,12 +53,15 @@ const TaskProvider = ({ children }) => {
         },
         body: JSON.stringify(updatedTaskData),
       });
+      if (!response.ok) {
+        throw new Error('Error al actualizar la tarea: ' + response.statusText);
+      }
       const data = await response.json();
       console.log('Tarea actualizada:', data);
-      // Actualizar la lista de tareas después de actualizar una tarea
       getAllTasks();
     } catch (error) {
       console.error('Error al actualizar la tarea:', error);
+      setError('Hubo un problema al actualizar la tarea. Por favor, inténtalo de nuevo más tarde.');
     }
   };
 
@@ -60,24 +70,23 @@ const TaskProvider = ({ children }) => {
       const response = await fetch(`http://localhost:5001/tasks/${taskId}`, {
         method: 'DELETE',
       });
-      if (response.ok) {
-        console.log('Tarea eliminada exitosamente');
-        // Actualizar la lista de tareas después de eliminar una tarea
-        getAllTasks();
-      } else {
-        console.error('Error al eliminar la tarea:', response.statusText);
+      if (!response.ok) {
+        throw new Error('Error al eliminar la tarea: ' + response.statusText);
       }
+      console.log('Tarea eliminada exitosamente');
+      getAllTasks();
     } catch (error) {
       console.error('Error al eliminar la tarea:', error);
+      setError('Hubo un problema al eliminar la tarea. Por favor, inténtalo de nuevo más tarde.');
     }
   };
 
   useEffect(() => {
     getAllTasks();
-  }, []); // Se ejecuta solo una vez al montar el componente
+  }, []);
 
   return (
-    <TaskContext.Provider value={{ data, addTask, updateTask, deleteTask }}>
+    <TaskContext.Provider value={{ data, addTask, updateTask, deleteTask, error }}>
       {children}
     </TaskContext.Provider>
   );

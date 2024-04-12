@@ -3,7 +3,7 @@ import { TextField, Button, Grid } from '@mui/material';
 import { TaskContext, useTasks } from '../../context/TaskContext'; // Importa el contexto TaskContext
 
 const TaskFormComponent = () => {
-  const { addTask } = useTasks(); // Obtén la función addTask del contexto
+  const { addTask } = useTasks();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
@@ -25,7 +25,7 @@ const TaskFormComponent = () => {
       currentState,
       notes,
     };
-    // Call addTask function from the context with the new task data
+    
     addTask(newTask);
     // Clear form fields
     setTitle('');
