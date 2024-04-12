@@ -1,8 +1,17 @@
 import { Button, Grid, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { useTasks } from '../../context/TaskContext'; // Importa el contexto y el hook useTasks
+import { useTasks } from '../../context/TaskContext';
 
-const Task = ({ id, title, description, dueDate, currentState, notes, onDelete }) => {
+type TaskProps = {
+  id: number;
+  title: string;
+  description: string;
+  dueDate: string;
+  currentState: string;
+  notes: string;
+};
+
+const Task: React.FC<TaskProps> = ({ id, title, description, dueDate, currentState, notes }) => {
   const { updateTask, deleteTask } = useTasks();
 
   const [isEditing, setIsEditing] = useState(false);

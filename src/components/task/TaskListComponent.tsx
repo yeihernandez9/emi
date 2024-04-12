@@ -14,8 +14,6 @@ const TaskList = ({ tasks }) => {
             dueDate={task.dueDate}
             currentState={task.currentState}
             notes={task.notes}
-            onDelete={undefined}
-            onEdit={undefined}
           />
         </Grid>
       ))}
